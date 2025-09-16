@@ -109,14 +109,14 @@ const Home: React.FC = () => {
                   </p>
 
                   {/* Repo name */}
-                  <p className="text-lg font-semibold break-words mb-3">
+                  <p className="md:text-lg text-sm font-semibold break-words mb-3">
                     {repo.name}
                   </p>
 
                   {/* Creation date */}
-                  <p className="text-sm text-gray-400 mt-auto">
+                  <p className="md:text-sm text-xs text-gray-400 mt-auto">
                     Created on{" "}
-                    <span className="text-gray-300 font-medium">
+                    <span className="text-gray-300 font-medium md:text-sm text-xs">
                       {new Date(repo.createdAt).toLocaleDateString(undefined, {
                         year: "numeric",
                         month: "short",

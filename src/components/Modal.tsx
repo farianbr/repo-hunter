@@ -31,7 +31,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           borderRadius: "10px",
           color: "white",
         }}
-        className="max-w-[300px] md:min-w-[500px] bg-none"
+        className="w-full  md:max-w-[400px] md:min-w-[500px] bg-none"
         onClick={(e) => e.stopPropagation()}
       >
         <WobbleCard className="text-center" containerClassName="bg-slate-900">

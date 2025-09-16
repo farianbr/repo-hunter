@@ -2,7 +2,7 @@ import { SparklesCore } from "./ui/sparkles";
 
 const Title = () => {
   return (
-    <div className="h-130 w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
+    <div className="h-100 md:h-130 w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
       {/* Title with logo */}
       <div className="flex items-center gap-3">
         <img
