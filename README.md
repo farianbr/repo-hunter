@@ -1,69 +1,38 @@
-# React + TypeScript + Vite
+# 🚀 Repo Hunter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Repo Hunter is a React + Vite + TypeScript app that fetches and displays GitHub repositories using the GitHub GraphQL API.  
+It provides an elegant UI to explore repositories with animations and responsive layouts.  
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- Search by GitHub username and list repositories  
+- Displays:
+  - Repo name
+  - Stars ⭐
+  - Top 5 stargazers
+  - Commit count
+  - Creation & last update dates  
+- Adaptive grid (1 column if ≤5 repos, 2 columns if >5 repos)  
+- Modern UI with Tailwind CSS & Aceternity UI animations  
+- Fully responsive design  
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠️ Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- Vite + React + TypeScript  
+- Apollo Client & GraphQL  
+- Tailwind CSS  
+- Aceternity UI components (TypewriterEffect, TracingBeam, SparklesCore)  
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🚀 Future Improvements
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Use a backend proxy to securely handle GitHub tokens  
+- Add repo insights (languages, forks, issues, PRs)  
+- Pagination & infinite scrolling for large repo lists  
+- Add animations when opening repo details in modal  
+- Offline-ready with PWA support  
