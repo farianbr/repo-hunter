@@ -1,67 +1,74 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-
+import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 type Direction = "TOP" | "LEFT" | "BOTTOM" | "RIGHT";
 
-export function HoverBorderGradient({
+// Base props of our component
+interface BaseProps {
+  containerClassName?: string;
+  className?: string;
+  duration?: number;
+  clockwise?: boolean;
+  children: React.ReactNode;
+}
+
+// Polymorphic prop helper: allows `as` to control which props are valid
+type PolymorphicProps<T extends React.ElementType> = {
+  as?: T;
+} & BaseProps &
+  Omit<React.ComponentPropsWithoutRef<T>, keyof BaseProps | "as">;
+
+export function HoverBorderGradient<T extends React.ElementType = "button">({
   children,
   containerClassName,
   className,
-  as: Tag = "button",
+  as,
   duration = 1,
   clockwise = true,
   ...props
-}: React.PropsWithChildren<
-  {
-    as?: React.ElementType;
-    containerClassName?: string;
-    className?: string;
-    duration?: number;
-    clockwise?: boolean;
-  } & React.HTMLAttributes<HTMLElement>
->) {
-  const [hovered, setHovered] = useState<boolean>(false);
+}: PolymorphicProps<T>) {
+const Tag = (as || "button") as React.ElementType<{ children?: React.ReactNode }>;
+  const [hovered, setHovered] = useState(false);
   const [direction, setDirection] = useState<Direction>("TOP");
 
-  const rotateDirection = (currentDirection: Direction): Direction => {
+  const rotateDirection = (current: Direction): Direction => {
     const directions: Direction[] = ["TOP", "LEFT", "BOTTOM", "RIGHT"];
-    const currentIndex = directions.indexOf(currentDirection);
+    const currentIndex = directions.indexOf(current);
     const nextIndex = clockwise
       ? (currentIndex - 1 + directions.length) % directions.length
       : (currentIndex + 1) % directions.length;
     return directions[nextIndex];
   };
 
-const movingMap: Record<Direction, string> = {
-  TOP: "radial-gradient(60% 100% at 50% 0%, rgba(50,117,248,1) 0%, rgba(50,117,248,0.6) 50%, rgba(50,117,248,0) 95%)",
-  LEFT: "radial-gradient(100% 60% at 0% 50%, rgba(50,117,248,1) 0%, rgba(50,117,248,0.6) 50%, rgba(50,117,248,0) 95%)",
-  BOTTOM: "radial-gradient(60% 100% at 50% 100%, rgba(50,117,248,1) 0%, rgba(50,117,248,0.6) 50%, rgba(50,117,248,0) 95%)",
-  RIGHT: "radial-gradient(100% 60% at 100% 50%, rgba(50,117,248,1) 0%, rgba(50,117,248,0.6) 50%, rgba(50,117,248,0) 95%)",
-};
+  const movingMap: Record<Direction, string> = {
+    TOP: "radial-gradient(60% 100% at 50% 0%, rgba(50,117,248,1) 0%, rgba(50,117,248,0.6) 50%, rgba(50,117,248,0) 95%)",
+    LEFT: "radial-gradient(100% 60% at 0% 50%, rgba(50,117,248,1) 0%, rgba(50,117,248,0.6) 50%, rgba(50,117,248,0) 95%)",
+    BOTTOM:
+      "radial-gradient(60% 100% at 50% 100%, rgba(50,117,248,1) 0%, rgba(50,117,248,0.6) 50%, rgba(50,117,248,0) 95%)",
+    RIGHT:
+      "radial-gradient(100% 60% at 100% 50%, rgba(50,117,248,1) 0%, rgba(50,117,248,0.6) 50%, rgba(50,117,248,0) 95%)",
+  };
 
-const highlight =
-  "radial-gradient(100% 200% at 50% 50%, rgba(50,117,248,1) 0%, rgba(50,117,248,0.8) 40%, rgba(50,117,248,0.4) 70%, rgba(50,117,248,0) 100%)";
-
+  const highlight =
+    "radial-gradient(100% 200% at 50% 50%, rgba(50,117,248,1) 0%, rgba(50,117,248,0.8) 40%, rgba(50,117,248,0.4) 70%, rgba(50,117,248,0) 100%)";
 
   useEffect(() => {
     if (!hovered) {
       const interval = setInterval(() => {
-        setDirection((prevState) => rotateDirection(prevState));
+        setDirection((prev) => rotateDirection(prev));
       }, duration * 1000);
       return () => clearInterval(interval);
     }
-  }, [hovered]);
+  }, [hovered, duration, clockwise]);
+
   return (
     <Tag
-      onMouseEnter={(event: React.MouseEvent<HTMLDivElement>) => {
-        setHovered(true);
-      }}
+      onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={cn(
-        "relative flex rounded-full border  content-center bg-black/20 hover:bg-black/10 transition duration-500 dark:bg-white/20 items-center flex-col flex-nowrap gap-10 h-min justify-center overflow-visible p-px decoration-clone w-fit",
+        "relative flex w-fit rounded-full border bg-black/20 hover:bg-black/10 transition duration-500 dark:bg-white/20 items-center flex-col gap-10 overflow-visible p-px",
         containerClassName
       )}
       {...props}
@@ -74,25 +81,20 @@ const highlight =
       >
         {children}
       </div>
+
       <motion.div
-        className={cn(
-          "flex-none inset-0 overflow-hidden absolute z-0 rounded-[inherit]"
-        )}
-        style={{
-          filter: "blur(2px)",
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-        }}
+        className="absolute inset-0 z-0 flex-none overflow-hidden rounded-[inherit]"
+        style={{ filter: "blur(2px)" }}
         initial={{ background: movingMap[direction] }}
         animate={{
           background: hovered
             ? [movingMap[direction], highlight]
             : movingMap[direction],
         }}
-        transition={{ ease: "linear", duration: duration ?? 1 }}
+        transition={{ ease: "linear", duration }}
       />
-      <div className="bg-black absolute z-1 flex-none inset-[2px] rounded-[100px]" />
+
+      <div className="absolute inset-[2px] z-0 flex-none rounded-[100px] bg-black" />
     </Tag>
   );
 }
